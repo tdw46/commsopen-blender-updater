@@ -1,14 +1,18 @@
-# CommsOpen Blender Updater
+# Product Updates
+
+CommsOpen lets software check whether new files are available for a purchased product edition. The public API returns the current version and file revision. Each tutorial shows how to use that information in a particular application.
+
+## Tutorial: Add update button to Blender!
 
 Give buyers **Check for updates** and **Update from CommsOpen** buttons inside your Blender extension. Checking uses public edition metadata. Installing opens CommsOpen in the buyer’s default browser, asks them to approve one purchased ZIP, and installs it into the repository where their extension is running.
 
-## Connect your product
+### Connect your product
 
 1. In CommsOpen, connect your GitHub content account. Open your shop product’s **Buyer downloads → Manage edition files → GitHub release**.
 2. Import the built extension ZIP from a stable release such as `v1.2.3`. Its manifest must identify your add-on and version `1.2.3`. Include vendored dependencies in the uploaded release asset.
-3. Select the imported ZIP for the appropriate edition and save. Under **Blender add-on setup**, find the product and edition IDs. If several current release ZIPs are selected, the buyer chooses one on the approval screen.
+3. Select the imported ZIP for the appropriate edition and save. Under **Product Updates**, find the product and edition IDs. If several current release ZIPs are selected, the buyer chooses one on the approval screen.
 
-## Vendor and register
+### Vendor and register
 
 From your extension’s Git checkout:
 
@@ -44,7 +48,7 @@ For a single-edition product, omit `edition`. Pass the extension root package ev
 network = "Check for updates and download approved purchases from CommsOpen"
 ```
 
-## Buyer experience
+### Buyer experience
 
 - **Check for updates** fetches the selected edition once. The controller compares the release version to the installed manifest. After its first successful installation it also detects a rebuilt release with the same version and a different revision.
 - **Update from CommsOpen** opens the normal CommsOpen sign-in page when needed. Sign in with the account that owns the download and choose **Allow update**. A recently linked guest purchase needs an account download grant before it can be used here.
