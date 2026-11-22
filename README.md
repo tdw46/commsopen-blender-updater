@@ -12,6 +12,8 @@ Give buyers **Check for updates** and **Update from CommsOpen** buttons inside y
 2. Import the built extension ZIP from a stable release such as `v1.2.3`. Its manifest must identify your add-on and version `1.2.3`. Include vendored dependencies in the uploaded release asset.
 3. Select the imported ZIP for the appropriate edition and save. Under **Product Updates**, find the product and edition IDs. If several current release ZIPs are selected, the buyer chooses one on the approval screen.
 
+**Replacing a ZIP without changing its version.** Leave **Automatic updates** on for the selected file. On GitHub, replace the uploaded ZIP on the latest stable release using the exact same filename. Edit the release notes and click **Update release** so GitHub sends a release edit to CommsOpen. You can keep the tag, manifest version and filename at `1.0.0` for a corrected build. CommsOpen keeps the buyer’s existing download permission and identifies the new bytes by their file revision.
+
 ### Vendor and register
 
 From your extension’s Git checkout:
@@ -48,10 +50,18 @@ For a single-edition product, omit `edition`. Pass the extension root package ev
 network = "Check for updates and download approved purchases from CommsOpen"
 ```
 
-### Buyer experience
+### Sign in and download from Blender
 
-- **Check for updates** fetches the selected edition once. The controller compares the release version to the installed manifest. After its first successful installation it also detects a rebuilt release with the same version and a different revision.
-- **Update from CommsOpen** opens the normal CommsOpen sign-in page when needed. Sign in with the account that owns the download and choose **Allow update**. A recently linked guest purchase needs an account download grant before it can be used here.
+1. In the installed add-on, click **Update from CommsOpen**. This starts the update in Blender and opens the approval page in your default browser.
+2. If prompted, sign in to **CommsOpen** with the account that owns the edition. If you’re already signed in, you go straight to approval. A guest purchase must first be linked to your account.
+3. Select the add-on ZIP if several files are offered, then click **Allow update**. When the browser says **Return to Blender to finish your update**, switch back to Blender. The add-on checks the approved file and installs it in place.
+
+Buyers only need their CommsOpen account. GitHub access is for the creator who publishes the release. Keep account passwords in the browser. For a custom Blender button, call `updates.start("install")` from its operator to run this same sign-in, download and installation flow.
+
+### Checking for a rebuilt release
+
+**Check for updates** reads public edition metadata once, without signing in. After the first successful install through CommsOpen, the add-on remembers the installed revision. A different revision then shows as an update even if the version number is identical. If the buyer installed a ZIP manually, Blender initially knows only its version. They can choose **Update from CommsOpen** once to install the current build and establish that baseline.
+
 - Blender’s installer refreshes the same local repository and reloads the add-on. Keep user preferences and persistent data in Blender’s extension-user storage. An add-on carrying an already-loaded native library can require a restart.
 - Updates require a writable, locally managed Blender extension repository, a manifest-based add-on ZIP, and Blender’s **Allow Online Access**. Git development checkouts and system or remotely managed repositories are protected. Classic single-file scripts do not carry the manifest identity used for in-place updates.
 - The helper runs on demand and exits. It never stores a CommsOpen password or reusable account token. Local approval listens only on a random loopback port and times out after three minutes. Failed or interrupted downloads can be requested again from the add-on. A successful transfer counts against any existing purchase download limit.
