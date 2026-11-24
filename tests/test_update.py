@@ -13,6 +13,13 @@ sys.modules[spec.name] = sdk
 spec.loader.exec_module(sdk)
 
 class UpdateTests(unittest.TestCase):
+    def test_announced_beta_is_visible_without_an_install_receipt(self):
+        beta = {"version": "1.0.0", "revision": "beta-build", "channel": "beta"}
+        self.assertTrue(sdk.update_available("1.0.0", None, beta))
+        self.assertTrue(sdk.update_available("1.0.0", "prior-build", beta))
+        self.assertFalse(sdk.update_available("1.0.0", "beta-build", beta))
+        self.assertFalse(sdk.update_available("1.0.1", None, beta))
+
     def archive(self, files):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)

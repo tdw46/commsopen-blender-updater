@@ -62,6 +62,9 @@ def update_available(installed_version, installed_revision, remote):
     if not remote.get("version"):
         return False
     local, latest = _version(installed_version), _version(remote["version"])
+    # An explicitly announced beta can be selected on a first check at the same version.
+    if remote.get("channel") == "beta":
+        return latest >= local and remote["revision"] != installed_revision
     return latest > local or (latest == local and bool(installed_revision) and remote["revision"] != installed_revision)
 
 
